@@ -11,7 +11,7 @@ $(function(){
     if(temp === 1)
     {
       currentPlayer.tempScore = 0;
-      alert(currentPlayer.name+"'s' turn is over.");
+      alert(currentPlayer.name+"'s turn is over.");
       endTurn();
 
     }
