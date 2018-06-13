@@ -4,17 +4,24 @@ var playerTwo = new Player("Player Two",1);
 
 $(function(){
   $("#turn").text(currentPlayer.name);
+  updateScore();
   $("#btn-roll").click(function(){
     var temp = (Math.floor(Math.random()*6)+1)
     $("#dice").text(temp.toString());
     if(temp === 1)
     {
       currentPlayer.tempScore = 0;
+      alert(currentPlayer.name+"'s' turn is over.");
       endTurn();
+
     }
     else
     {
       currentPlayer.tempScore += temp;
+      if((currentPlayer.tempScore + currentPlayer.totalScore)>=100)
+      {
+        alert("You Won");
+      }
     }
     $("#score").text(currentPlayer.tempScore.toString());
 

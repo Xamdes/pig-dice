@@ -11,31 +11,30 @@
 <body class="container-fluid">
   <div class="jumbotron center-text">
     <h1>Pig Dice</h1>
-    <h3>Current Player is: <span id="turn"></span></h3>
-    <h3>Dice Roll: <span id="dice"></span></h3>
-    <h3>Current Turn Score: <span id="score"></span></h3>
   </div>
   <div class="panel panel-info">
+    <h3 class="center-text">Current Player is: <span id="turn"></span></h3>
+    <h3 class="center-text">Dice Roll: <span id="dice"></span></h3>
+    <h3 class="center-text">Current Turn Score: <span id="score"></span></h3>
     <div class="row">
-      <div class="col-md-4">
+      <div class="col-md-4"></div>
+      <div class="col-md-2">
+        <p class="center-text">Player One: <span id="player-one">0</span></p>
       </div>
       <div class="col-md-2">
-        <p class="center-text">Player One: <span id="player-one"></span></button>
-      </div>
-      <div class="col-md-2">
-        <p class="center-text">Player Two: <span id="player-two"></span></button>
+        <p class="center-text">Player Two: <span id="player-two">0</span></p>
       </div>
       <div class="col-md-4">
       </div>
     </div>
-    <div class="row">
+    <div class="row mod-div">
       <div class="col-md-5">
       </div>
       <div class="col-md-1">
-        <button id="btn-roll"class="btn back-col-azure">Roll Dice</button>
+        <button type="button" id="btn-roll" class="btn btn-danger">Roll Dice</button>
       </div>
       <div class="col-md-1">
-        <button id="btn-hold"class="btn back-col-azure">Hold</button>
+        <button type="button" id="btn-hold" class="btn btn-primary">Hold</button>
       </div>
       <div class="col-md-5">
       </div>
