@@ -19,3 +19,11 @@ body  {
   padding: 2px;
   margin: 2px;
 }
+
+.center-text  {
+  text-align: center;
+}
+
+.back-col-azure  {
+  background-color: azure;
+}
