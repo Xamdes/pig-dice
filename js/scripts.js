@@ -1,6 +1,7 @@
 var currentPlayer = new Player("Player One",0);
 var playerOne = new Player("Player One",0);
 var playerTwo = new Player("Player Two",1);
+var opponentsScore = 0;
 
 $(function(){
   $("#turn").text(currentPlayer.name);
@@ -32,7 +33,6 @@ $(function(){
   {
     currentPlayer.calculateScore();
     endTurn();
-
   });
 });
 
@@ -44,7 +44,6 @@ function Player(playerName,uid)
   this.totalScore = 0;
   //Used for Ai
   this.confidence = 5;
-  this.rollsPerTurn = 2;
   this.dieRollCounter = 0;
 }
 
@@ -54,17 +53,17 @@ Player.prototype.calculateScore = function()
   this.tempScore = 0;
 }
 
-Player.prototype.aiConCheck = function(opponentScore)
+Player.prototype.aiConCheck = function()
 {
-  if(opponentScore > this.totalScore)
+  if(opponentsScore >= this.totalScore)
   {
     this.confidence++;
-    if(opponentScore-this.totalScore>=30)
+    if(opponentsScore-this.totalScore>=30)
     {
       this.confidence++;
     }
   }
-  else
+  else if(opponentsScore < (this.totalScore-25))
   {
     this.confidence--;
   }
@@ -74,18 +73,41 @@ Player.prototype.aiConCheck = function(opponentScore)
     this.confidence = 10;
   }
   else if(this.confidence < 1){
-    this.confidence =1;
+    this.confidence = 1;
   }
 }
 
-Player.prototype.choice = function(opponentScore)
+Player.prototype.choice = function()
 {
-  this.aiConCheck(opponentScore);
-
+  //this.aiConCheck();
+  var con = this.confidence;
+  var rolls = 2;
+  if(con > 9)
+  {
+    rolls = 6;
+  }
+  else if(con > 7)
+  {
+    rolls = 4;
+  }
+  else if(con > 5)
+  {
+    rolls = 3;
+  }
+  else if(con > 3)
+  {
+    rolls = 2;
+  }
+  else
+  {
+    rolls = 1;
+  }
+  return rolls;
 }
 
 function endTurn()
 {
+  opponentsScore = currentPlayer.totalScore;
   if(currentPlayer.id === 0)
   {
     playerOne = currentPlayer;
@@ -98,6 +120,8 @@ function endTurn()
   $("#score").text("0");
   startTurn();
   updateScore();
+  currentPlayer.aiConCheck();
+  currentPlayer.choice();
 }
 
 function startTurn()
