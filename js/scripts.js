@@ -62,6 +62,70 @@ $(function(){
   });
 });
 
+function endTurn()
+{
+  currentPlayer.tempScore = 0;
+  //alert(currentPlayer.name+"'s turn is over.");
+  opponentsScore = currentPlayer.totalScore;
+  if(currentPlayer.id === 0)
+  {
+    playerOne = currentPlayer;
+  }
+  else
+  {
+    playerTwo = currentPlayer;
+  }
+  $("#dice").text("1");
+  $("#score").text("0");
+  startTurn();
+  updateScore();
+  currentPlayer.aiConCheck();
+  currentPlayer.choice();
+}
+
+function startTurn()
+{
+  UpdatePlayerNames();
+  if(currentPlayer.id === 0)
+  {
+    currentPlayer = playerTwo;
+  }
+  else
+  {
+    currentPlayer = playerOne;
+  }
+  currentPlayer.dieRollCounter = 0;
+  $("#turn").text(currentPlayer.name);
+}
+
+function updateScore()
+{
+  $("#player-one").text(playerOne.totalScore);
+  $("#player-two").text(playerTwo.totalScore);
+}
+
+function continueTurn(rollNumber)
+{
+  currentPlayer.tempScore += rollNumber;
+  if((currentPlayer.tempScore + currentPlayer.totalScore)>=100)
+  {
+    alert(currentPlayer.name+" Won!");
+    playerOne.reset();
+    playerTwo.reset();
+  }
+}
+
+function roll(diceSides)
+{
+  return (Math.floor(Math.random()*diceSides)+1)
+}
+
+function  UpdatePlayerNames()
+{
+  playerOne.name = $("#name-player-one").val().trim();
+  playerTwo.name = $("#name-player-two").val().trim();
+}
+
 function Player(playerName,uid,ai)
 {
   this.name = playerName;
@@ -104,20 +168,26 @@ Player.prototype.aiConCheck = function()
   }
 }
 
+Player.prototype.reset()
+{
+  this.tempScore = 0;
+  this.totalScore = 0;
+  //Used for Ai
+  this.confidence = 5;
+  this.dieRollCounter = 0;
+}
+
+
 Player.prototype.choice = function()
 {
   //this.aiConCheck();
   var con = this.confidence;
   var rolls = 2;
-  if(con > 9)
-  {
-    rolls = 6;
-  }
-  else if(con > 7)
+  if(con === 10)
   {
     rolls = 4;
   }
-  else if(con > 5)
+  else if(con > 7)
   {
     rolls = 3;
   }
@@ -130,59 +200,4 @@ Player.prototype.choice = function()
     rolls = 1;
   }
   return rolls;
-}
-
-function endTurn()
-{
-  currentPlayer.tempScore = 0;
-  alert(currentPlayer.name+"'s turn is over.");
-  opponentsScore = currentPlayer.totalScore;
-  if(currentPlayer.id === 0)
-  {
-    playerOne = currentPlayer;
-  }
-  else
-  {
-    playerTwo = currentPlayer;
-  }
-  $("#dice").text("1");
-  $("#score").text("0");
-  startTurn();
-  updateScore();
-  currentPlayer.aiConCheck();
-  currentPlayer.choice();
-}
-
-function startTurn()
-{
-  if(currentPlayer.id === 0)
-  {
-    currentPlayer = playerTwo;
-  }
-  else
-  {
-    currentPlayer = playerOne;
-  }
-  currentPlayer.dieRollCounter = 0;
-  $("#turn").text(currentPlayer.name);
-}
-
-function updateScore()
-{
-  $("#player-one").text(playerOne.totalScore);
-  $("#player-two").text(playerTwo.totalScore);
-}
-
-function continueTurn(rollNumber)
-{
-  currentPlayer.tempScore += rollNumber;
-  if((currentPlayer.tempScore + currentPlayer.totalScore)>=100)
-  {
-    alert("You Won");
-  }
-}
-
-function roll(diceSides)
-{
-  return (Math.floor(Math.random()*diceSides)+1)
 }
