@@ -2,12 +2,16 @@ var currentPlayer = new Player("Player One",0,false);
 var playerOne = new Player("Player One",0,false);
 var playerTwo = new Player("Player Two",1,true);
 var opponentsScore = 0;
+var round = 0;
 
 $(function(){
   $("#turn").text(currentPlayer.name);
   currentPlayer = playerOne;
   updateScore();
-  $("#btn-roll").click(function(){
+  $("#btn-roll").click(function()
+  {
+    //startTurn();
+    UpdatePlayerNames();
     currentPlayer.dieRollCounter++;
     var rollNumber = 0;
     if(currentPlayer.aiEnabled)
@@ -78,13 +82,14 @@ function endTurn()
   $("#dice").text("1");
   $("#score").text("0");
   startTurn();
-  updateScore();
-  currentPlayer.aiConCheck();
-  currentPlayer.choice();
+
 }
 
 function startTurn()
 {
+  updateScore();
+  currentPlayer.aiConCheck();
+  currentPlayer.choice();
   UpdatePlayerNames();
   if(currentPlayer.id === 0)
   {
@@ -94,6 +99,7 @@ function startTurn()
   {
     currentPlayer = playerOne;
   }
+  round++;
   currentPlayer.dieRollCounter = 0;
   $("#turn").text(currentPlayer.name);
 }
@@ -168,7 +174,7 @@ Player.prototype.aiConCheck = function()
   }
 }
 
-Player.prototype.reset()
+Player.prototype.reset = function()
 {
   this.tempScore = 0;
   this.totalScore = 0;
