@@ -1,32 +1,58 @@
-var currentPlayer = new Player("Player One",0);
-var playerOne = new Player("Player One",0);
-var playerTwo = new Player("Player Two",1);
+var currentPlayer = new Player("Player One",0,false);
+var playerOne = new Player("Player One",0,false);
+var playerTwo = new Player("Player Two",1,true);
 var opponentsScore = 0;
 
 $(function(){
   $("#turn").text(currentPlayer.name);
+  currentPlayer = playerOne;
   updateScore();
   $("#btn-roll").click(function(){
-    var temp = (Math.floor(Math.random()*6)+1)
-    $("#dice").text(temp.toString());
     currentPlayer.dieRollCounter++;
-    if(temp === 1)
+    var rollNumber = 0;
+    if(currentPlayer.aiEnabled)
     {
-      currentPlayer.tempScore = 0;
-      alert(currentPlayer.name+"'s turn is over.");
-      endTurn();
+      var tempScore = 0;
+      var rollCounter =0;
+      var aiRolls = currentPlayer.choice();
+      while (rollNumber !=1 && (rollCounter <= aiRolls))
+      {
+        rollNumber = roll(6);
+        if(rollNumber != 1)
+        {
+          console.log(rollNumber);
+          continueTurn(rollNumber)
+        }
+        rollCounter++;
+      }
 
+      if(rollNumber === 1)
+      {
+        console.log("Test 1");
+        endTurn();
+      }
+      else
+      {
+        console.log("Test 2");
+        currentPlayer.calculateScore();
+        endTurn();
+      }
     }
     else
     {
-      currentPlayer.tempScore += temp;
-      if((currentPlayer.tempScore + currentPlayer.totalScore)>=100)
+      rollNumber = roll(6);
+      $("#dice").text(rollNumber.toString());
+      if(rollNumber === 1)
       {
-        alert("You Won");
+        endTurn();
+      }
+      else
+      {
+        continueTurn(rollNumber);
       }
     }
-    $("#score").text(currentPlayer.tempScore.toString());
 
+    $("#score").text(currentPlayer.tempScore.toString());
   });
 
   $("#btn-hold").click(function()
@@ -36,7 +62,7 @@ $(function(){
   });
 });
 
-function Player(playerName,uid)
+function Player(playerName,uid,ai)
 {
   this.name = playerName;
   this.id = uid;
@@ -45,6 +71,7 @@ function Player(playerName,uid)
   //Used for Ai
   this.confidence = 5;
   this.dieRollCounter = 0;
+  this.aiEnabled = ai;
 }
 
 Player.prototype.calculateScore = function()
@@ -107,6 +134,8 @@ Player.prototype.choice = function()
 
 function endTurn()
 {
+  currentPlayer.tempScore = 0;
+  alert(currentPlayer.name+"'s turn is over.");
   opponentsScore = currentPlayer.totalScore;
   if(currentPlayer.id === 0)
   {
@@ -142,4 +171,18 @@ function updateScore()
 {
   $("#player-one").text(playerOne.totalScore);
   $("#player-two").text(playerTwo.totalScore);
+}
+
+function continueTurn(rollNumber)
+{
+  currentPlayer.tempScore += rollNumber;
+  if((currentPlayer.tempScore + currentPlayer.totalScore)>=100)
+  {
+    alert("You Won");
+  }
+}
+
+function roll(diceSides)
+{
+  return (Math.floor(Math.random()*diceSides)+1)
 }
