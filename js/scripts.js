@@ -1,6 +1,6 @@
 var currentPlayer = new Player("Player One",0,false);
 var playerOne = new Player("Player One",0,false);
-var playerTwo = new Player("Player Two",1,true);
+var playerTwo = new Player("Player Two",1,false);
 var opponentsScore = 0;
 var round = 0;
 
@@ -63,6 +63,18 @@ $(function(){
   {
     currentPlayer.calculateScore();
     endTurn();
+  });
+
+  $("#btn-ai-one").click(function()
+  {
+    playerOne.toggleAI();
+    $("#btn-ai-one").text("AI: "+playerOne.aiEnabled.toString().toUpperCase());
+  });
+
+  $("#btn-ai-two").click(function()
+  {
+    playerTwo.toggleAI();
+    $("#btn-ai-two").text("AI: "+playerTwo.aiEnabled.toString().toUpperCase());
   });
 });
 
@@ -206,4 +218,9 @@ Player.prototype.choice = function()
     rolls = 1;
   }
   return rolls;
+}
+
+Player.prototype.toggleAI = function()
+{
+  this.aiEnabled = !this.aiEnabled;
 }
