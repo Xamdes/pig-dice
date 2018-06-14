@@ -1,12 +1,13 @@
-var currentPlayer = new Player("Player One",0,false);
-var playerOne = new Player("Player One",0,false);
-var playerTwo = new Player("Player Two",1,false);
+var currentPlayer = new Player("Player One",0,false,"green");
+var playerOne = new Player("Player One",0,false,"green");
+var playerTwo = new Player("Player Two",1,false,"red");
 var opponentsScore = 0;
 var round = 0;
 
 $(function(){
-  $("#turn").text(currentPlayer.name);
   currentPlayer = playerOne;
+  $("#turn").text(currentPlayer.name);
+  document.getElementById("turn").style.color = currentPlayer.color;
   updateScore();
   $("#btn-roll").click(function()
   {
@@ -24,7 +25,7 @@ $(function(){
         rollNumber = roll(6);
         if(rollNumber != 1)
         {
-          console.log(rollNumber);
+          //console.log(rollNumber);
           continueTurn(rollNumber)
         }
         rollCounter++;
@@ -32,12 +33,12 @@ $(function(){
 
       if(rollNumber === 1)
       {
-        console.log("Test 1");
+        //console.log("Test 1");
         endTurn();
       }
       else
       {
-        console.log("Test 2");
+        //console.log("Test 2");
         currentPlayer.calculateScore();
         endTurn();
       }
@@ -61,8 +62,11 @@ $(function(){
 
   $("#btn-hold").click(function()
   {
-    currentPlayer.calculateScore();
-    endTurn();
+    if(!currentPlayer.aiEnabled)
+    {
+      currentPlayer.calculateScore();
+      endTurn();
+    }
   });
 
   $("#btn-ai-one").click(function()
@@ -113,7 +117,8 @@ function startTurn()
   }
   round++;
   currentPlayer.dieRollCounter = 0;
-  $("#turn").text(currentPlayer.name);
+  $("#turn").html(currentPlayer.name);
+  document.getElementById("turn").style.color = currentPlayer.color;
 }
 
 function updateScore()
@@ -130,7 +135,7 @@ function continueTurn(rollNumber)
     alert(currentPlayer.name+" Won!");
     playerOne.reset();
     playerTwo.reset();
-    currentPlayer = playerOne;
+    currentPlayer.reset();
   }
 }
 
@@ -145,7 +150,7 @@ function  UpdatePlayerNames()
   playerTwo.name = $("#name-player-two").val().trim();
 }
 
-function Player(playerName,uid,ai)
+function Player(playerName,uid,ai,tempColor)
 {
   this.name = playerName;
   this.id = uid;
@@ -155,6 +160,16 @@ function Player(playerName,uid,ai)
   this.confidence = 5;
   this.dieRollCounter = 0;
   this.aiEnabled = ai;
+  this.color = tempColor;
+}
+
+Player.prototype.reset = function()
+{
+  this.tempScore = 0;
+  this.totalScore = 0;
+  //Used for Ai
+  this.confidence = 5;
+  this.dieRollCounter = 0;
 }
 
 Player.prototype.calculateScore = function()
@@ -186,16 +201,6 @@ Player.prototype.aiConCheck = function()
     this.confidence = 1;
   }
 }
-
-Player.prototype.reset = function()
-{
-  this.tempScore = 0;
-  this.totalScore = 0;
-  //Used for Ai
-  this.confidence = 5;
-  this.dieRollCounter = 0;
-}
-
 
 Player.prototype.choice = function()
 {
