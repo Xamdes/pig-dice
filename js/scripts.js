@@ -8,6 +8,7 @@ $(function(){
   $("#btn-roll").click(function(){
     var temp = (Math.floor(Math.random()*6)+1)
     $("#dice").text(temp.toString());
+    currentPlayer.dieRollCounter++;
     if(temp === 1)
     {
       currentPlayer.tempScore = 0;
@@ -41,12 +42,46 @@ function Player(playerName,uid)
   this.id = uid;
   this.tempScore = 0;
   this.totalScore = 0;
+  //Used for Ai
+  this.confidence = 5;
+  this.rollsPerTurn = 2;
+  this.dieRollCounter = 0;
 }
 
 Player.prototype.calculateScore = function()
 {
   this.totalScore += this.tempScore;
   this.tempScore = 0;
+}
+
+Player.prototype.aiConCheck = function(opponentScore)
+{
+  if(opponentScore > this.totalScore)
+  {
+    this.confidence++;
+    if(opponentScore-this.totalScore>=30)
+    {
+      this.confidence++;
+    }
+  }
+  else
+  {
+    this.confidence--;
+  }
+
+  if(this.confidence > 10)
+  {
+    this.confidence = 10;
+  }
+  else if(this.confidence < 1){
+    this.confidence =1;
+  }
+}
+
+Player.prototype.choice = function(opponentScore)
+{
+  this.aiConCheck(opponentScore);
+
 }
 
 function endTurn()
@@ -75,6 +110,7 @@ function startTurn()
   {
     currentPlayer = playerOne;
   }
+  currentPlayer.dieRollCounter = 0;
   $("#turn").text(currentPlayer.name);
 }
 
