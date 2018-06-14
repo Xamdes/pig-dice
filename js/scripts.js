@@ -135,7 +135,8 @@ function continueTurn(rollNumber)
     alert(currentPlayer.name+" Won!");
     playerOne.reset();
     playerTwo.reset();
-    currentPlayer.reset();
+    //Need to set to Player two so when the game resets it switches back to player one
+    currentPlayer = playerTwo;
   }
 }
 
