@@ -130,6 +130,7 @@ function continueTurn(rollNumber)
     alert(currentPlayer.name+" Won!");
     playerOne.reset();
     playerTwo.reset();
+    currentPlayer = playerOne;
   }
 }
 
